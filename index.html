@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hand Tracking Aman</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #1a1a1a;
+            color: #fff;
+            font-family: sans-serif;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+            font-size: 1.4rem;
+        }
+
+        p {
+            color: #888;
+            font-size: 0.85rem;
+            margin-top: 0;
+        }
+
+        .container {
+            position: relative;
+            width: 640px;
+            height: 480px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: scaleX(-1);
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: none;
+        }
+
+        /* Overlay error message */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+        }
+
+        .overlay.hidden {
+            display: none;
+        }
+
+        .overlay-box {
+            background: #111;
+            color: #fff;
+            padding: 18px 22px;
+            border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .overlay-box button {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border: none;
+            background: #00FFCC;
+            color: #042;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+
+    <!-- Menggunakan CDN Resmi yang Stabil untuk Mencegah Error Internal DOM -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"
+        crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
+        crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <h1>Aplikasi Pembaca Jari</h1>
+    <p>Arahkan tangan Anda ke depan kamera</p>
+
+    <div class="container">
+        <!-- Pastikan ID elemen ini benar-benar ada sebelum script dipanggil -->
+        <video id="webcam" autoplay muted playsinline></video>
+        <canvas id="output_canvas" width="640" height="480"></canvas>
+    </div>
+
+    <div id="error_overlay" class="overlay hidden" aria-hidden="true">
+        <div class="overlay-box">
+            <p id="error_message">Terjadi kesalahan.</p>
+            <button id="error_close">Tutup</button>
+        </div>
+    </div>
+
+    <div style="margin-top:12px; display:flex; gap:8px; align-items:center;">
+        <div id="camera_status" style="color:#ccc; font-size:0.9rem; margin-left:8px;">Status: Idle</div>
+    </div>
+
+    <!-- Gunakan defer agar dimuat paling akhir setelah elemen HTML selesai -->
+    <script defer src="script.js"></script>
+</body>
+
+</html>
