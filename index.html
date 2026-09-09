@@ -43,7 +43,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            transform: scaleX(-1);
+            transform: none;
         }
 
         canvas {
@@ -89,6 +89,107 @@
             border-radius: 6px;
             cursor: pointer;
         }
+
+        /* --- Controls (camera toggle, calibration, sensitivity) --- */
+        .controls-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            margin-top: 12px;
+        }
+
+        .controls-panel button {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            background: #00FFCC;
+            color: #042;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .controls-panel button:hover {
+            filter: brightness(1.08);
+        }
+
+        .controls-panel button.secondary {
+            background: #333;
+            color: #eee;
+        }
+
+        .status-text {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .hint-text {
+            color: #9fd9c9;
+            font-size: 0.85rem;
+            margin-top: 6px;
+            min-height: 1.2em;
+            text-align: center;
+            max-width: 640px;
+        }
+
+        .sensitivity-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .sensitivity-row input[type="range"] {
+            width: 180px;
+        }
+
+        /* --- Elements created dynamically from script.js --- */
+        .sos-column {
+            position: fixed;
+            right: 12px;
+            top: 12px;
+            width: 180px;
+            max-height: 60vh;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.6);
+            color: #FFDDDD;
+            padding: 8px;
+            border-radius: 8px;
+            font: 13px Arial, sans-serif;
+            z-index: 9999;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .sos-column-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .sos-entry {
+            padding: 6px 8px;
+            margin-bottom: 6px;
+            background: linear-gradient(90deg, rgba(255, 80, 80, 0.12), rgba(255, 40, 40, 0.06));
+            border-radius: 6px;
+            border: 1px solid rgba(255, 80, 80, 0.12);
+            color: #FFDCDC;
+            font-size: 13px;
+        }
+
+        .count-box {
+            position: absolute;
+            pointer-events: none;
+            padding: 8px 12px;
+            background: rgba(18, 18, 18, 0.85);
+            color: #00FFCC;
+            border-radius: 4px;
+            font: bold 16px Arial;
+            transform: translate(-50%, 0);
+            direction: ltr;
+            unicode-bidi: normal;
+        }
     </style>
 
     <!-- Menggunakan CDN Resmi yang Stabil untuk Mencegah Error Internal DOM -->
@@ -117,8 +218,20 @@
         </div>
     </div>
 
-    <div style="margin-top:12px; display:flex; gap:8px; align-items:center;">
-        <div id="camera_status" style="color:#ccc; font-size:0.9rem; margin-left:8px;">Status: Idle</div>
+    <div class="controls-panel">
+        <div id="camera_status" class="status-text" aria-live="polite" aria-atomic="true">Status: Idle</div>
+    </div>
+
+    <div class="controls-panel">
+        <button id="btn_toggle_camera" type="button">Mulai / Hentikan Kamera</button>
+        <button id="btn_calibrate" type="button">Kalibrasi Deteksi Jari</button>
+        <button id="btn_reset_calibration" type="button" class="secondary">Reset Kalibrasi</button>
+    </div>
+    <div id="calib_status" class="hint-text" aria-live="polite"></div>
+
+    <div class="sensitivity-row">
+        <label for="sos_sensitivity">Sensitivitas Gerakan SOS: <span id="sos_sensitivity_value">5</span>/10</label>
+        <input type="range" id="sos_sensitivity" min="1" max="10" step="1" value="5">
     </div>
 
     <!-- Gunakan defer agar dimuat paling akhir setelah elemen HTML selesai -->
